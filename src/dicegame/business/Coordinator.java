@@ -33,9 +33,6 @@ public class Coordinator {
     }
 
     public void startGameLogic() {
-        if (round != 7) {
-            resetVariables();
-        }
         System.out.println(printScoreBoard());
         while (round < 8 && !forfeit) {
             startRound();
@@ -44,6 +41,10 @@ public class Coordinator {
     }
 
     private void startRound() {
+        if (round != 7) {
+            resetVariables();
+        }
+
         System.out.println(printRound());
         playTurn(players.get(currentPlayer));
     }
@@ -95,6 +96,7 @@ public class Coordinator {
                 }else {
                     processThrowAndPrintInfo(input3, player);
                     player.setDiceLeft(countOccurrences(input3));
+                    this.activeCategory = input3;
                 }
             }
         }else {
@@ -107,7 +109,13 @@ public class Coordinator {
 
     private StringBuilder printMessage1 (Player player) {
         StringBuilder temp = new StringBuilder();
-        temp.append("First throw of this turn, ");
+
+        if (this.turnsLeft == 3) {
+            temp.append("First throw of this turn, ");
+        }else {
+            temp.append("Next throw of this turn, ");
+        }
+
         temp.append(player.getPlayerName());
         temp.append(" to throw ");
         temp.append(player.getDiceLeft());
