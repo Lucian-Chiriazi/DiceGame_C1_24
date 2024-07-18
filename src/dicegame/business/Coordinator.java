@@ -78,7 +78,9 @@ public class Coordinator {
                 System.out.print(printCategoryOptions());
                 String input3 = scanner.nextLine().trim();
 
-                
+                while (!Validation.categoryValidation(input, player, this.currentThrow)) {
+
+                }
             }
 
 
