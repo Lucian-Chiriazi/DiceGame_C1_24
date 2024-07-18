@@ -42,6 +42,10 @@ public class Player {
         return Integer.toString(totalScore);
     }
 
+    public String getPlayerCategoryScore(int category) {
+        return playerScores[category];
+    }
+
     public void setDiceLeft(int diceKept) {
         this.diceLeft -= diceKept;
     }
