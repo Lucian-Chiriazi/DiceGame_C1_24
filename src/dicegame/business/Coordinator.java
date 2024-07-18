@@ -38,6 +38,13 @@ public class Coordinator {
     private void playTurn(Player player) {
         Scanner scanner = new Scanner(System.in);
         System.out.println(printMessage1(player));
+        System.out.println();
+        System.out.println(printMessage2(player));
+
+        String input = scanner.nextLine().trim();
+
+
+
     }
 
 
@@ -48,6 +55,15 @@ public class Coordinator {
         temp.append(" to throw ");
         temp.append(player.getDiceLeft());
         temp.append(" dice.");
+
+        return temp;
+    }
+
+    private StringBuilder printMessage2 (Player player) {
+        StringBuilder temp = new StringBuilder();
+        temp.append("Throw ");
+        temp.append(player.getDiceLeft());
+        temp.append(" dice, enter 't' to throw or 'f' to forfeit >  ");
 
         return temp;
     }
