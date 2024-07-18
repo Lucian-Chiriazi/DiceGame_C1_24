@@ -25,6 +25,10 @@ public class Coordinator {
     }
 
     public void startGameLogic() {
+        if (round != 7) {
+            resetVariables();
+        }
+        
         while (round < 8 && !forfeit) {
             startRound();
             round++;
@@ -150,6 +154,11 @@ public class Coordinator {
         scoreboard.append("------------------------------------------\n");
 
         return scoreboard;
+    }
+
+    private void resetVariables() {
+        this.currentPlayer = 0;
+        this.turnsLeft = 3;
     }
 
 }
