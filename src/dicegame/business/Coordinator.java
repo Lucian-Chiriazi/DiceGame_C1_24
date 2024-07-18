@@ -1,5 +1,6 @@
 package dicegame.business;
 
+import com.sun.xml.internal.bind.v2.TODO;
 import dicegame.data.DAO;
 import dicegame.data.SimpleDAOImplementation;
 
@@ -71,7 +72,21 @@ public class Coordinator {
                 System.out.print(printMessage5());
                 input2 = scanner.nextLine().trim();
             }
+
+            if (input2.equals("s")) {
+                System.out.println("Select category to play\n");
+                System.out.print(printCategoryOptions());
+                String input3 = scanner.nextLine().trim();
+
+                
+            }
+
+
+
+        }else {
+            initialiseForfeitProcedure();
         }
+
         scanner.close();
     }
 
@@ -200,6 +215,12 @@ public class Coordinator {
         return scoreboard;
     }
 
+    private StringBuilder printCategoryOptions() {
+        StringBuilder temp = new StringBuilder();
+        temp.append("Ones (1) Twos (2) Threes (3) Fours (4) Fives (5) Sixes (6) Sequence (7) >");
+        return temp;
+    }
+
     private ArrayList<Integer> generateThrow(Player player) {
         ArrayList<Integer> temp = new ArrayList<>();
         Random rand = new Random();
@@ -208,6 +229,10 @@ public class Coordinator {
             temp.add(rand.nextInt(6) + 1);
         }
         return temp;
+    }
+
+    private void initialiseForfeitProcedure() {
+        //TODO: finish this
     }
 
     private void resetVariables() {
