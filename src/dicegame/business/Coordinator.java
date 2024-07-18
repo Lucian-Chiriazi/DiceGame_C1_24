@@ -9,11 +9,24 @@ public class Coordinator {
 
     private DAO dao;
     private ArrayList<Player> players;
+    private int round;
+    private boolean forfeit;
 
     public Coordinator() {
         dao = new SimpleDAOImplementation();
         this.players = dao.getPlayers();
+        this.round = 1;
+        this.forfeit = false;
     }
+
+    public void startGameLogic() {
+        System.out.println(printScoreBoard());
+        while (round < 8 && !forfeit) {
+            startRound();
+        }
+    }
+
+    private void startRound() {}
 
     private StringBuilder printScoreBoard() {
         StringBuilder scoreboard = new StringBuilder();
