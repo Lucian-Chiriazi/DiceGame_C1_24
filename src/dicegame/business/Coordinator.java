@@ -4,6 +4,7 @@ import dicegame.data.DAO;
 import dicegame.data.SimpleDAOImplementation;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Coordinator {
@@ -14,6 +15,7 @@ public class Coordinator {
     private boolean forfeit;
     private int currentPlayer;
     private int turnsLeft;
+    private ArrayList<Integer> currentThrow;
 
     public Coordinator() {
         dao = new SimpleDAOImplementation();
@@ -22,6 +24,7 @@ public class Coordinator {
         this.forfeit = false;
         this.currentPlayer = 0;
         this.turnsLeft = 3;
+        this.currentThrow = new ArrayList<>();
     }
 
     public void startGameLogic() {
@@ -53,7 +56,15 @@ public class Coordinator {
             input = scanner.nextLine().trim();
         }
 
+        if (input.equals("t")) {
+            turnsLeft--;
+            System.out.println();
+            System.out.println(printThrowsLeft());
 
+            this.currentThrow = generateThrow(player);
+            System.out.println(printThrow());
+
+        }
 
     }
 
@@ -82,6 +93,17 @@ public class Coordinator {
         StringBuilder temp = new StringBuilder();
         temp.append("Invalid input\n");
         temp.append("Enter 't' to throw or 'f' to forfeit > ");
+
+        return temp;
+    }
+
+    private StringBuilder printThrow() {
+        StringBuilder temp = new StringBuilder();
+
+        temp.append("Throw:");
+        for (Integer value : currentThrow) {
+            temp.append(" [").append(value).append("]");
+        }
 
         return temp;
     }
@@ -154,6 +176,16 @@ public class Coordinator {
         scoreboard.append("------------------------------------------\n");
 
         return scoreboard;
+    }
+
+    private ArrayList<Integer> generateThrow(Player player) {
+        ArrayList<Integer> temp = new ArrayList<>();
+        Random rand = new Random();
+        int diceLeft = player.getDiceLeft();
+        for (int i = 0; i < diceLeft; i++) {
+            temp.add(rand.nextInt(6) + 1);
+        }
+        return temp;
     }
 
     private void resetVariables() {
