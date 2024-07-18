@@ -43,7 +43,10 @@ public class Coordinator {
 
         String input = scanner.nextLine().trim();
 
-
+        while (!Validation.throwValidation(input)) {
+            System.out.println(printMessage3());
+            input = scanner.nextLine().trim();
+        }
 
     }
 
@@ -64,6 +67,14 @@ public class Coordinator {
         temp.append("Throw ");
         temp.append(player.getDiceLeft());
         temp.append(" dice, enter 't' to throw or 'f' to forfeit >  ");
+
+        return temp;
+    }
+
+    private StringBuilder printMessage3 () {
+        StringBuilder temp = new StringBuilder();
+        temp.append("Invalid input\n");
+        temp.append("Enter 't' to throw or 'f' to forfeit > ");
 
         return temp;
     }
