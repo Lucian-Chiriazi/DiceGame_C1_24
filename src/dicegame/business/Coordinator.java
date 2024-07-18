@@ -97,6 +97,12 @@ public class Coordinator {
                     processThrowAndPrintInfo(input3, player);
                     player.setDiceLeft(countOccurrences(input3));
                     this.activeCategory = input3;
+
+                    while (this.turnsLeft != 0 && !forfeit) {
+                        playNext(player);
+                    }
+
+
                 }
             }
         }else {
@@ -162,6 +168,31 @@ public class Coordinator {
         temp.append("Select a category not chosen before to play.\n");
 
         return temp;
+    }
+
+    private void playNext(Player player) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println();
+        System.out.println();
+        System.out.println(printMessage1(player));
+        System.out.print(printMessage2(player));
+
+        String input = scanner.nextLine().trim();
+
+        while (!Validation.throwValidation(input)) {
+            System.out.print(printMessage3());
+            input = scanner.nextLine().trim();
+        }
+
+        if (input.equals("t")) {
+            turnsLeft--;
+            this.currentThrow = generateThrow(player);
+            System.out.println(printThrow());
+            processThrowAndPrintInfo(activeCategory, player);
+            player.setDiceLeft(countOccurrences(activeCategory));
+        }else {
+            initialiseForfeitProcedure();
+        }
     }
 
     private void playSequence() {
@@ -325,6 +356,7 @@ public class Coordinator {
 
     private void initialiseForfeitProcedure() {
         //TODO: finish this
+        this.forfeit = true;
     }
 
     private void resetVariables() {
