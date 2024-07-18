@@ -67,9 +67,12 @@ public class Coordinator {
 
             String input2 = scanner.nextLine().trim();
 
-
+            while (!Validation.selectOrDeferInputValidation(input2)) {
+                System.out.print(printMessage5());
+                input2 = scanner.nextLine().trim();
+            }
         }
-
+        scanner.close();
     }
 
 
@@ -103,6 +106,14 @@ public class Coordinator {
 
     private StringBuilder printMessage4 () {
         StringBuilder temp = new StringBuilder();
+        temp.append("Enter 's' to select category (number on die/dice) or 'd' to defer >");
+
+        return temp;
+    }
+
+    private StringBuilder printMessage5 () {
+        StringBuilder temp = new StringBuilder();
+        temp.append("Invalid input\n");
         temp.append("Enter 's' to select category (number on die/dice) or 'd' to defer >");
 
         return temp;
