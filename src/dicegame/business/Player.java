@@ -55,7 +55,7 @@ public class Player {
     }
 
     public void setPlayerScores(int category, int score) {
-        this.playerScores[category] = Integer.toString(score);
+        this.playerScores[category - 1] = Integer.toString(score);
     }
 
     public void resetVariables() {

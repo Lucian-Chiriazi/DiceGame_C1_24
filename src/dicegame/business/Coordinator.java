@@ -101,7 +101,9 @@ public class Coordinator {
                     while (this.turnsLeft != 0 && !forfeit) {
                         playNext(player);
                     }
-
+                    player.setPlayerScores(Integer.parseInt(activeCategory), calculateTurnScore());
+                    System.out.println();
+                    System.out.println(printMessage7(player));
 
                 }
             }
@@ -112,6 +114,34 @@ public class Coordinator {
         scanner.close();
     }
 
+    private void playNext(Player player) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println();
+        System.out.println();
+        System.out.println(printMessage1(player));
+        System.out.print(printMessage2(player));
+
+        String input = scanner.nextLine().trim();
+
+        while (!Validation.throwValidation(input)) {
+            System.out.print(printMessage3());
+            input = scanner.nextLine().trim();
+        }
+
+        if (input.equals("t")) {
+            turnsLeft--;
+            this.currentThrow = generateThrow(player);
+            System.out.println(printThrow());
+            processThrowAndPrintInfo(activeCategory, player);
+            player.setDiceLeft(countOccurrences(activeCategory));
+        }else {
+            initialiseForfeitProcedure();
+        }
+    }
+
+    private void playSequence() {
+        //TODO: finish this
+    }
 
     private StringBuilder printMessage1(Player player) {
         StringBuilder temp = new StringBuilder();
@@ -172,44 +202,14 @@ public class Coordinator {
 
     private StringBuilder printMessage7 (Player player) {
         StringBuilder temp = new StringBuilder();
-        int category = Integer.parseInt(activeCategory);
         temp.append(player.getPlayerName());
         temp.append(" made ");
         temp.append(currentDiceKept.size());
         temp.append(" with value ");
         temp.append(activeCategory);
-        temp.append(player.getPlayerCategoryScore(category - 1));
+        temp.append(calculateTurnScore());
         temp.append(" for that round");
         return temp;
-    }
-
-    private void playNext(Player player) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println();
-        System.out.println();
-        System.out.println(printMessage1(player));
-        System.out.print(printMessage2(player));
-
-        String input = scanner.nextLine().trim();
-
-        while (!Validation.throwValidation(input)) {
-            System.out.print(printMessage3());
-            input = scanner.nextLine().trim();
-        }
-
-        if (input.equals("t")) {
-            turnsLeft--;
-            this.currentThrow = generateThrow(player);
-            System.out.println(printThrow());
-            processThrowAndPrintInfo(activeCategory, player);
-            player.setDiceLeft(countOccurrences(activeCategory));
-        }else {
-            initialiseForfeitProcedure();
-        }
-    }
-
-    private void playSequence() {
-        //TODO: finish this
     }
 
     private StringBuilder printThrow() {
@@ -365,6 +365,14 @@ public class Coordinator {
         for (int i = 0; i < occurrences; i++) {
             currentDiceKept.add(choice);
         }
+    }
+
+    private int calculateTurnScore() {
+        int totalScore = 0;
+        for (Integer value : currentDiceKept) {
+            totalScore += value;
+        }
+        return totalScore;
     }
 
     private void initialiseForfeitProcedure() {
