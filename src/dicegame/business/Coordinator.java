@@ -113,7 +113,7 @@ public class Coordinator {
     }
 
 
-    private StringBuilder printMessage1 (Player player) {
+    private StringBuilder printMessage1(Player player) {
         StringBuilder temp = new StringBuilder();
 
         if (this.turnsLeft == 3) {
@@ -130,7 +130,7 @@ public class Coordinator {
         return temp;
     }
 
-    private StringBuilder printMessage2 (Player player) {
+    private StringBuilder printMessage2(Player player) {
         StringBuilder temp = new StringBuilder();
         temp.append("Throw ");
         temp.append(player.getDiceLeft());
@@ -139,7 +139,7 @@ public class Coordinator {
         return temp;
     }
 
-    private StringBuilder printMessage3 () {
+    private StringBuilder printMessage3() {
         StringBuilder temp = new StringBuilder();
         temp.append("Invalid input\n");
         temp.append("Enter 't' to throw or 'f' to forfeit > ");
@@ -147,14 +147,14 @@ public class Coordinator {
         return temp;
     }
 
-    private StringBuilder printMessage4 () {
+    private StringBuilder printMessage4() {
         StringBuilder temp = new StringBuilder();
         temp.append("Enter 's' to select category (number on die/dice) or 'd' to defer >");
 
         return temp;
     }
 
-    private StringBuilder printMessage5 () {
+    private StringBuilder printMessage5() {
         StringBuilder temp = new StringBuilder();
         temp.append("Invalid input\n");
         temp.append("Enter 's' to select category (number on die/dice) or 'd' to defer >");
@@ -162,11 +162,24 @@ public class Coordinator {
         return temp;
     }
 
-    private StringBuilder printMessage6 () {
+    private StringBuilder printMessage6() {
         StringBuilder temp = new StringBuilder();
         temp.append("Invalid input\n");
         temp.append("Select a category not chosen before to play.\n");
 
+        return temp;
+    }
+
+    private StringBuilder printMessage7 (Player player) {
+        StringBuilder temp = new StringBuilder();
+        int category = Integer.parseInt(activeCategory);
+        temp.append(player.getPlayerName());
+        temp.append(" made ");
+        temp.append(currentDiceKept.size());
+        temp.append(" with value ");
+        temp.append(activeCategory);
+        temp.append(player.getPlayerCategoryScore(category - 1));
+        temp.append(" for that round");
         return temp;
     }
 
@@ -286,7 +299,7 @@ public class Coordinator {
         return temp;
     }
 
-    private StringBuilder printCategoryName (String input) {
+    private StringBuilder printCategoryName(String input) {
         StringBuilder temp = new StringBuilder();
         switch (input) {
             case "1" :
@@ -324,7 +337,7 @@ public class Coordinator {
         return temp;
     }
 
-    private void processThrowAndPrintInfo (String input, Player player) {
+    private void processThrowAndPrintInfo(String input, Player player) {
 
         int occurrences = countOccurrences(input);
         updateDiceKept(input, occurrences);
@@ -336,7 +349,7 @@ public class Coordinator {
         }
     }
 
-    private int countOccurrences (String input) {
+    private int countOccurrences(String input) {
         int count = 0;
         int choice = Integer.parseInt(input);
         for(Integer value : this.currentThrow) {
