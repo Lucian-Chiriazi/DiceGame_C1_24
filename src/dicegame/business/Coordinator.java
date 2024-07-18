@@ -4,6 +4,7 @@ import dicegame.data.DAO;
 import dicegame.data.SimpleDAOImplementation;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Coordinator {
 
@@ -11,12 +12,14 @@ public class Coordinator {
     private ArrayList<Player> players;
     private int round;
     private boolean forfeit;
+    private int currentPlayer;
 
     public Coordinator() {
         dao = new SimpleDAOImplementation();
         this.players = dao.getPlayers();
         this.round = 7;
         this.forfeit = false;
+        this.currentPlayer = 0;
     }
 
     public void startGameLogic() {
@@ -28,6 +31,25 @@ public class Coordinator {
     private void startRound() {
         System.out.println(printScoreBoard());
         System.out.println(printRound());
+
+        playTurn(players.get(currentPlayer));
+    }
+
+    private void playTurn(Player player) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println(printMessage1(player));
+    }
+
+
+    private StringBuilder printMessage1 (Player player) {
+        StringBuilder temp = new StringBuilder();
+        temp.append("First throw of this turn, ");
+        temp.append(player.getPlayerName());
+        temp.append(" to throw ");
+        temp.append(player.getDiceLeft());
+        temp.append(" dice.");
+
+        return temp;
     }
 
     private StringBuilder printRound() {
