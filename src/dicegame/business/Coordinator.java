@@ -63,6 +63,7 @@ public class Coordinator {
 
             this.currentThrow = generateThrow(player);
             System.out.println(printThrow());
+            System.out.print(printMessage4());
 
         }
 
@@ -93,6 +94,13 @@ public class Coordinator {
         StringBuilder temp = new StringBuilder();
         temp.append("Invalid input\n");
         temp.append("Enter 't' to throw or 'f' to forfeit > ");
+
+        return temp;
+    }
+
+    private StringBuilder printMessage4 () {
+        StringBuilder temp = new StringBuilder();
+        temp.append("Enter 's' to select category (number on die/dice) or 'd' to defer >");
 
         return temp;
     }
