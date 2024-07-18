@@ -13,6 +13,7 @@ public class Coordinator {
     private int round;
     private boolean forfeit;
     private int currentPlayer;
+    private int turnsLeft;
 
     public Coordinator() {
         dao = new SimpleDAOImplementation();
@@ -20,11 +21,13 @@ public class Coordinator {
         this.round = 7;
         this.forfeit = false;
         this.currentPlayer = 0;
+        this.turnsLeft = 3;
     }
 
     public void startGameLogic() {
         while (round < 8 && !forfeit) {
             startRound();
+            round++;
         }
     }
 
@@ -39,12 +42,12 @@ public class Coordinator {
         Scanner scanner = new Scanner(System.in);
         System.out.println(printMessage1(player));
         System.out.println();
-        System.out.println(printMessage2(player));
+        System.out.print(printMessage2(player));
 
         String input = scanner.nextLine().trim();
 
         while (!Validation.throwValidation(input)) {
-            System.out.println(printMessage3());
+            System.out.print(printMessage3());
             input = scanner.nextLine().trim();
         }
 
@@ -75,6 +78,14 @@ public class Coordinator {
         StringBuilder temp = new StringBuilder();
         temp.append("Invalid input\n");
         temp.append("Enter 't' to throw or 'f' to forfeit > ");
+
+        return temp;
+    }
+
+    private StringBuilder printThrowsLeft () {
+        StringBuilder temp = new StringBuilder();
+        temp.append(turnsLeft);
+        temp.append(" throws remaining for this turn.\n");
 
         return temp;
     }
