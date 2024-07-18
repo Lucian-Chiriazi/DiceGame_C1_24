@@ -16,7 +16,9 @@ public class Coordinator {
     private boolean forfeit;
     private int currentPlayer;
     private int turnsLeft;
+    private String activeCategory;
     private ArrayList<Integer> currentThrow;
+    private ArrayList<Integer> currentDiceKept;
 
     public Coordinator() {
         dao = new SimpleDAOImplementation();
@@ -25,7 +27,9 @@ public class Coordinator {
         this.forfeit = false;
         this.currentPlayer = 0;
         this.turnsLeft = 3;
+        this.activeCategory = "";
         this.currentThrow = new ArrayList<>();
+        this.currentDiceKept = new ArrayList<>();
     }
 
     public void startGameLogic() {
@@ -83,10 +87,16 @@ public class Coordinator {
                     System.out.print(printCategoryOptions());
                     input3 = scanner.nextLine().trim();
                 }
+
+                System.out.println(printCategoryName(input3));
+
+                if (input3.equals("7")) {
+                    playSequence();
+                }else {
+                    processThrowAndPrintInfo(input3, player);
+                    player.setDiceLeft(countOccurrences(input3));
+                }
             }
-
-
-
         }else {
             initialiseForfeitProcedure();
         }
@@ -144,6 +154,10 @@ public class Coordinator {
         temp.append("Select a category not chosen before to play.\n");
 
         return temp;
+    }
+
+    private void playSequence() {
+        //TODO: finish this
     }
 
     private StringBuilder printThrow() {
@@ -233,6 +247,34 @@ public class Coordinator {
         return temp;
     }
 
+    private StringBuilder printCategoryName (String input) {
+        StringBuilder temp = new StringBuilder();
+        switch (input) {
+            case "1" :
+                temp.append("Ones selected.");
+                break;
+            case "2" :
+                temp.append("Twos selected.");
+                break;
+            case "3" :
+                temp.append("Threes selected.");
+                break;
+            case "4" :
+                temp.append("Fours selected.");
+                break;
+            case "5" :
+                temp.append("Fives selected.");
+                break;
+            case "6" :
+                temp.append("Sixes selected.");
+                break;
+            case "7" :
+                temp.append("Sequence selected.");
+                break;
+        }
+        return temp;
+    }
+
     private ArrayList<Integer> generateThrow(Player player) {
         ArrayList<Integer> temp = new ArrayList<>();
         Random rand = new Random();
@@ -241,6 +283,36 @@ public class Coordinator {
             temp.add(rand.nextInt(6) + 1);
         }
         return temp;
+    }
+
+    private void processThrowAndPrintInfo (String input, Player player) {
+
+        int occurrences = countOccurrences(input);
+        updateDiceKept(input, occurrences);
+
+        System.out.print("That throw had " + occurrences + " dice with value " + input + ".");
+        System.out.print(" Setting aside " + occurrences + " dice:");
+        for (Integer value : currentDiceKept) {
+            System.out.print(" [" + value + "] ");
+        }
+    }
+
+    private int countOccurrences (String input) {
+        int count = 0;
+        int choice = Integer.parseInt(input);
+        for(Integer value : this.currentThrow) {
+            if(value == choice) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private void updateDiceKept(String input, int occurrences) {
+        int choice = Integer.parseInt(input);
+        for (int i = 0; i < occurrences; i++) {
+            currentDiceKept.add(choice);
+        }
     }
 
     private void initialiseForfeitProcedure() {
