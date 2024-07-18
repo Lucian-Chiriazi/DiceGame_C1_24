@@ -78,8 +78,10 @@ public class Coordinator {
                 System.out.print(printCategoryOptions());
                 String input3 = scanner.nextLine().trim();
 
-                while (!Validation.categoryValidation(input, player, this.currentThrow)) {
-
+                while (!Validation.categoryValidation(input3, player, this.currentThrow)) {
+                    System.out.println(printMessage6());
+                    System.out.print(printCategoryOptions());
+                    input3 = scanner.nextLine().trim();
                 }
             }
 
@@ -132,6 +134,14 @@ public class Coordinator {
         StringBuilder temp = new StringBuilder();
         temp.append("Invalid input\n");
         temp.append("Enter 's' to select category (number on die/dice) or 'd' to defer >");
+
+        return temp;
+    }
+
+    private StringBuilder printMessage6 () {
+        StringBuilder temp = new StringBuilder();
+        temp.append("Invalid input\n");
+        temp.append("Select a category not chosen before to play.\n");
 
         return temp;
     }
