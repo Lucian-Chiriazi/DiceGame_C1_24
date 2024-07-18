@@ -20,4 +20,10 @@ public class Validation {
         Pattern pattern = Pattern.compile(regex); // Compile the regex into a pattern.
         return pattern.matcher(input).matches();
     }
+
+    public static boolean selectOrDeferInputValidation(String input) {
+        String regex = "^[sd]$";
+        Pattern pattern = Pattern.compile(regex);
+        return pattern.matcher(input).matches();
+    }
 }

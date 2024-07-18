@@ -65,6 +65,9 @@ public class Coordinator {
             System.out.println(printThrow());
             System.out.print(printMessage4());
 
+            String input2 = scanner.nextLine().trim();
+
+
         }
 
     }
