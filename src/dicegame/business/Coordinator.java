@@ -15,18 +15,32 @@ public class Coordinator {
     public Coordinator() {
         dao = new SimpleDAOImplementation();
         this.players = dao.getPlayers();
-        this.round = 1;
+        this.round = 7;
         this.forfeit = false;
     }
 
     public void startGameLogic() {
-        System.out.println(printScoreBoard());
         while (round < 8 && !forfeit) {
             startRound();
         }
     }
 
-    private void startRound() {}
+    private void startRound() {
+        System.out.println(printScoreBoard());
+        System.out.println(printRound());
+    }
+
+    private StringBuilder printRound() {
+        StringBuilder round = new StringBuilder();
+
+        round.append("-------\n");
+        round.append("Round ");
+        round.append(this.round);
+        round.append("\n");
+        round.append("-------\n");
+
+        return round;
+    }
 
     private StringBuilder printScoreBoard() {
         StringBuilder scoreboard = new StringBuilder();
