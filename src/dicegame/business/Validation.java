@@ -8,4 +8,10 @@ public class Validation {
         Pattern pattern = Pattern.compile(regex);
         return pattern.matcher(input).matches();
     }
+
+    public static boolean throwValidation (String inputCharacter) {
+        String regex = "^[ft]$";
+        Pattern pattern = Pattern.compile(regex);
+        return pattern.matcher(inputCharacter).matches();
+    }
 }
