@@ -28,7 +28,7 @@ public class Coordinator {
         if (round != 7) {
             resetVariables();
         }
-        
+        System.out.println(printScoreBoard());
         while (round < 8 && !forfeit) {
             startRound();
             round++;
@@ -36,9 +36,7 @@ public class Coordinator {
     }
 
     private void startRound() {
-        System.out.println(printScoreBoard());
         System.out.println(printRound());
-
         playTurn(players.get(currentPlayer));
     }
 
@@ -54,6 +52,8 @@ public class Coordinator {
             System.out.print(printMessage3());
             input = scanner.nextLine().trim();
         }
+
+
 
     }
 
