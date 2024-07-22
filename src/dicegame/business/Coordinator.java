@@ -104,13 +104,12 @@ public class Coordinator {
                     player.setPlayerScores(Integer.parseInt(activeCategory), calculateTurnScore());
                     System.out.println();
                     System.out.println(printMessage7(player));
-
                 }
             }
         }else {
             initialiseForfeitProcedure();
         }
-
+        System.out.println(printScoreBoard());
         scanner.close();
     }
 
@@ -207,6 +206,7 @@ public class Coordinator {
         temp.append(currentDiceKept.size());
         temp.append(" with value ");
         temp.append(activeCategory);
+        temp.append(" and scores ");
         temp.append(calculateTurnScore());
         temp.append(" for that round");
         return temp;
@@ -343,7 +343,7 @@ public class Coordinator {
         updateDiceKept(input, occurrences);
 
         System.out.print("That throw had " + occurrences + " dice with value " + input + ".");
-        System.out.print(" Setting aside " + occurrences + " dice:");
+        System.out.print(" Setting aside " + currentDiceKept.size() + " dice:");
         for (Integer value : currentDiceKept) {
             System.out.print(" [" + value + "] ");
         }

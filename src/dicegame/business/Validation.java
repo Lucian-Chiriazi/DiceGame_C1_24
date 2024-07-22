@@ -39,8 +39,8 @@ public class Validation {
         int userChoice = Integer.parseInt(inputCharacter);
         String[] temp2 = player.getPlayerScores();
 
-        if (temp2[userChoice - 1] == null) {
-            for (Integer value : currentThrow) {
+        if (temp2[userChoice - 1] == null) { // Check to see if the category has already been chosen
+            for (Integer value : currentThrow) { // Check to see if the choice exists in current throw
                 if (value == userChoice) {
                     temp = true;
                 }
