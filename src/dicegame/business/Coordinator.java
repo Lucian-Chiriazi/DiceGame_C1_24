@@ -19,17 +19,19 @@ public class Coordinator {
     private String activeCategory;
     private ArrayList<Integer> currentThrow;
     private ArrayList<Integer> currentDiceKept;
+    private Scanner scanner;
 
     public Coordinator() {
         dao = new SimpleDAOImplementation();
         this.players = dao.getPlayers();
-        this.round = 7;
+        this.round = 6;
         this.forfeit = false;
         this.currentPlayer = 0;
         this.turnsLeft = 3;
         this.activeCategory = "";
         this.currentThrow = new ArrayList<>();
         this.currentDiceKept = new ArrayList<>();
+        this.scanner = new Scanner(System.in);
     }
 
     public void startGameLogic() {
@@ -38,19 +40,25 @@ public class Coordinator {
             startRound();
             round++;
         }
+        scanner.close();
     }
 
     private void startRound() {
-        if (round != 7) {
-            resetVariables();
-        }
+        this.currentPlayer = 0;
 
         System.out.println(printRound());
-        playTurn(players.get(currentPlayer));
+
+        for (int i = 0; i < players.size(); i++) {
+            playTurn(players.get(currentPlayer));
+            System.out.println("\n");
+            System.out.println(printScoreBoard());
+            resetVariables(players.get(currentPlayer));
+            currentPlayer++;
+        }
+
     }
 
     private void playTurn(Player player) {
-        Scanner scanner = new Scanner(System.in);
         System.out.println(printMessage1(player));
         System.out.println();
         System.out.print(printMessage2(player));
@@ -102,21 +110,22 @@ public class Coordinator {
                         playNext(player);
                     }
                     player.setPlayerScores(Integer.parseInt(activeCategory), calculateTurnScore());
-                    System.out.println();
+                    System.out.println("\n");
                     System.out.println(printMessage7(player));
+                }
+            }else {
+                System.out.println("Selection deferred.\n");
+                if (turnsLeft != 0) {
+                    playTurn(player);
                 }
             }
         }else {
             initialiseForfeitProcedure();
         }
-        System.out.println(printScoreBoard());
-        scanner.close();
     }
 
     private void playNext(Player player) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println();
-        System.out.println();
+        System.out.println("\n");
         System.out.println(printMessage1(player));
         System.out.print(printMessage2(player));
 
@@ -147,10 +156,11 @@ public class Coordinator {
 
         if (this.turnsLeft == 3) {
             temp.append("First throw of this turn, ");
-        }else {
+        }else if(this.turnsLeft == 2) {
             temp.append("Next throw of this turn, ");
+        }else {
+            temp.append("Final throw of this turn, ");
         }
-
         temp.append(player.getPlayerName());
         temp.append(" to throw ");
         temp.append(player.getDiceLeft());
@@ -380,9 +390,12 @@ public class Coordinator {
         this.forfeit = true;
     }
 
-    private void resetVariables() {
-        this.currentPlayer = 0;
+    private void resetVariables(Player player) {
+        this.activeCategory = " ";
+        this.currentThrow = new ArrayList<>();
+        this.currentDiceKept = new ArrayList<>();
         this.turnsLeft = 3;
+        player.resetVariables();
     }
 
 }
