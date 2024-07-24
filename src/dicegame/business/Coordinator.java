@@ -47,7 +47,6 @@ public class Coordinator {
         this.currentPlayer = 0;
 
         System.out.println(printRound());
-
         for (int i = 0; i < players.size(); i++) {
             playTurn(players.get(currentPlayer));
             System.out.println("\n");
@@ -387,8 +386,10 @@ public class Coordinator {
     }
 
     private void initialiseForfeitProcedure() {
-        //TODO: finish this
         this.forfeit = true;
+        System.out.println(printScoreBoard());
+        System.out.println("Game Over!");
+        System.exit(0);
     }
 
     private void resetVariables(Player player) {
