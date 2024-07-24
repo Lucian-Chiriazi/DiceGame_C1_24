@@ -30,6 +30,9 @@ public class Validation {
             if (categoryAvailable(input, player, currentThrow)) {
                 temp = true;
             }
+            if (input.equals("7")) {
+                temp = true;
+            }
         }
         return temp;
     }

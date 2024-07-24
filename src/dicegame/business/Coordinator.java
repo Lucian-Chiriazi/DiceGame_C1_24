@@ -99,7 +99,6 @@ public class Coordinator {
                 System.out.println(printCategoryName(input3));
 
                 if (input3.equals("7")) {
-                    System.out.println("Sequence 20 selected.");
                     playSequence();
                 }else {
                     processThrowAndPrintInfo(input3, player);
@@ -332,7 +331,7 @@ public class Coordinator {
                 temp.append("Sixes selected.");
                 break;
             case "7" :
-                temp.append("Sequence selected.");
+                temp.append("Sequence 20 selected.");
                 break;
         }
         return temp;
@@ -340,9 +339,16 @@ public class Coordinator {
 
     private StringBuilder printSequence() {
         StringBuilder temp = new StringBuilder();
+        int index = 0;
+        temp.append(index);
+        temp.append(". None");
+        temp.append("\n");
         for (Integer value : currentThrow) {
+            temp.append(index);
+            temp.append(". ");
             temp.append(" [").append(value).append("]");
-            System.out.println();
+            temp.append("\n");
+            index++;
         }
 
         return temp;
