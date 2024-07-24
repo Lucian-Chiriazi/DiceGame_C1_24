@@ -139,6 +139,7 @@ public class Coordinator {
         if (input.equals("t")) {
             turnsLeft--;
             this.currentThrow = generateThrow(player);
+            System.out.println();
             System.out.println(printThrow());
             processThrowAndPrintInfo(activeCategory, player);
             player.setDiceLeft(countOccurrences(activeCategory));
@@ -277,22 +278,22 @@ public class Coordinator {
         scoreboard.append(String.format("| %-8s     |     %2s     |     %2s     |\n",
                 "Fours",
                 (players.get(0).getPlayerCategoryScore(3) == null) ? " " : players.get(0).getPlayerCategoryScore(3),
-                (players.get(1).getPlayerCategoryScore(3) == null) ? " " : players.get(0).getPlayerCategoryScore(3)));
+                (players.get(1).getPlayerCategoryScore(3) == null) ? " " : players.get(1).getPlayerCategoryScore(3)));
         scoreboard.append("------------------------------------------\n");
         scoreboard.append(String.format("| %-8s     |     %2s     |     %2s     |\n",
                 "Fives",
                 (players.get(0).getPlayerCategoryScore(4) == null) ? " " : players.get(0).getPlayerCategoryScore(4),
-                (players.get(1).getPlayerCategoryScore(4) == null) ? " " : players.get(0).getPlayerCategoryScore(4)));
+                (players.get(1).getPlayerCategoryScore(4) == null) ? " " : players.get(1).getPlayerCategoryScore(4)));
         scoreboard.append("------------------------------------------\n");
         scoreboard.append(String.format("| %-8s     |     %2s     |     %2s     |\n",
                 "Sixes",
                 (players.get(0).getPlayerCategoryScore(5) == null) ? " " : players.get(0).getPlayerCategoryScore(5),
-                (players.get(1).getPlayerCategoryScore(5) == null) ? " " : players.get(0).getPlayerCategoryScore(5)));
+                (players.get(1).getPlayerCategoryScore(5) == null) ? " " : players.get(1).getPlayerCategoryScore(5)));
         scoreboard.append("------------------------------------------\n");
         scoreboard.append(String.format("| %-11s  |     %2s     |     %2s     |\n",
                 "Sequence 20",
                 (players.get(0).getPlayerCategoryScore(6) == null) ? " " : players.get(0).getPlayerCategoryScore(6),
-                (players.get(1).getPlayerCategoryScore(6) == null) ? " " : players.get(0).getPlayerCategoryScore(6)));
+                (players.get(1).getPlayerCategoryScore(6) == null) ? " " : players.get(1).getPlayerCategoryScore(6)));
         scoreboard.append("------------------------------------------\n");
         scoreboard.append(String.format("| %-8s     |     %2s     |     %2s     |\n",
                 "Total",

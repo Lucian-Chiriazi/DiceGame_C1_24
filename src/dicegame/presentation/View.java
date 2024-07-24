@@ -6,11 +6,12 @@ import dicegame.business.Validation;
 import java.util.Scanner;
 
 public class View {
-    private Scanner scanner = new Scanner(System.in);
+    private Scanner scanner;
     private Coordinator coordinator;
 
     public View (Coordinator coordinator) {
         this.coordinator = coordinator;
+        this.scanner = new Scanner(System.in);
     }
 
     public void startUI() {
