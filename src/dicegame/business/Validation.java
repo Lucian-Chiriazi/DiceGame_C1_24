@@ -37,6 +37,31 @@ public class Validation {
         return temp;
     }
 
+    public static boolean sequenceValidation (String input, ArrayList<Integer> currentThrow) {
+
+        String[] values = input.split("\\s+");
+        String regex = "^[012345 ]{1,9}$"; // A set of rules for the sequence input. (0 to 5 including spaces) and between 1 and 9 characters long.
+        Pattern pattern = Pattern.compile(regex); // Compile the regex into a pattern.
+
+        boolean patterMatcherCheck = pattern.matcher(input).matches();
+        boolean inputSizeCheck = true;
+        boolean containZeroCheck = true;
+
+        if (pattern.matcher(input).matches()) {
+            for (String value : values) {
+                int option = Integer.parseInt(value.trim());
+                if (option > currentThrow.size()) {
+                    inputSizeCheck = false;
+                }
+                if (option == 0 && input.length() > 1) {
+                    containZeroCheck = false;
+                }
+            }
+        }
+
+        return patterMatcherCheck && inputSizeCheck && containZeroCheck;
+    }
+
     public static boolean categoryAvailable (String inputCharacter,Player player, ArrayList<Integer> currentThrow) {
         boolean temp = false;
         int userChoice = Integer.parseInt(inputCharacter);
@@ -53,6 +78,4 @@ public class Validation {
         }
         return temp;
     }
-
-//    public static boolean
 }

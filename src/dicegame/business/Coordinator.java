@@ -148,9 +148,16 @@ public class Coordinator {
     }
 
     private void playSequence() {
-        turnsLeft--;
+        System.out.println();
         System.out.println(printSequence());
-        System.out.println(printMessage8());
+        System.out.print(printMessage8());
+        String input = scanner.nextLine().trim();
+
+        while (!Validation.sequenceValidation(input, currentThrow)) {
+            System.out.println("Not a valid input!");
+            System.out.print(printMessage8());
+            input = scanner.nextLine().trim();
+        }
     }
 
     private StringBuilder printMessage1(Player player) {
@@ -349,9 +356,8 @@ public class Coordinator {
 
     private StringBuilder printSequence() {
         StringBuilder temp = new StringBuilder();
-        int index = 0;
-        temp.append(index);
-        temp.append(". None");
+        int index = 1;
+        temp.append("0. None");
         temp.append("\n");
         for (Integer value : currentThrow) {
             temp.append(index);
