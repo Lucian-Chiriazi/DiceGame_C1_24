@@ -148,7 +148,9 @@ public class Coordinator {
     }
 
     private void playSequence() {
+        turnsLeft--;
         System.out.println(printSequence());
+        System.out.println(printMessage8());
     }
 
     private StringBuilder printMessage1(Player player) {
@@ -219,6 +221,14 @@ public class Coordinator {
         temp.append(" and scores ");
         temp.append(calculateTurnScore());
         temp.append(" for that round");
+        return temp;
+    }
+
+    private StringBuilder printMessage8 () {
+        StringBuilder temp = new StringBuilder();
+        temp.append("\n");
+        temp.append("Enter which dice you wish to set aside using the number labels separated by a space (e.g. 1, 3, 5) or enter 0 for none > ");
+
         return temp;
     }
 
