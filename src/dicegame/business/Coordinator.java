@@ -14,6 +14,7 @@ public class Coordinator {
     private ArrayList<Player> players;
     private int round;
     private boolean forfeit;
+    private boolean sequenceActive;
     private int currentPlayer;
     private int turnsLeft;
     private String activeCategory;
@@ -26,6 +27,7 @@ public class Coordinator {
         this.players = dao.getPlayers();
         this.round = 6;
         this.forfeit = false;
+        this.sequenceActive = false;
         this.currentPlayer = 0;
         this.turnsLeft = 3;
         this.activeCategory = "";
@@ -99,7 +101,8 @@ public class Coordinator {
                 System.out.println(printCategoryName(input3));
 
                 if (input3.equals("7")) {
-                    playSequence();
+                    sequenceActive = true;
+                    playSequence(player);
                 }else {
                     processThrowAndPrintInfo(input3, player);
                     player.setDiceLeft(countOccurrences(input3));
@@ -140,14 +143,18 @@ public class Coordinator {
             this.currentThrow = generateThrow(player);
             System.out.println();
             System.out.println(printThrow());
-            processThrowAndPrintInfo(activeCategory, player);
-            player.setDiceLeft(countOccurrences(activeCategory));
+            if (sequenceActive){
+                playSequence(player);
+            }else {
+                processThrowAndPrintInfo(activeCategory, player);
+                player.setDiceLeft(countOccurrences(activeCategory));
+            }
         }else {
             initialiseForfeitProcedure();
         }
     }
 
-    private void playSequence() {
+    private void playSequence(Player player) {
         System.out.println();
         System.out.println(printSequence());
         System.out.print(printMessage8());
@@ -158,6 +165,11 @@ public class Coordinator {
             System.out.print(printMessage8());
             input = scanner.nextLine().trim();
         }
+
+        if (input.equals("0") && turnsLeft != 0) {
+            playNext(player);
+        }
+
     }
 
     private StringBuilder printMessage1(Player player) {
@@ -166,7 +178,7 @@ public class Coordinator {
         if (this.turnsLeft == 3) {
             temp.append("First throw of this turn, ");
         }else if(this.turnsLeft == 2) {
-            temp.append("Next throw of this turn, ");
+            temp.append("Second throw of this turn, ");
         }else {
             temp.append("Final throw of this turn, ");
         }
@@ -231,11 +243,23 @@ public class Coordinator {
         return temp;
     }
 
-    private StringBuilder printMessage8 () {
+    private StringBuilder printMessage8() {
         StringBuilder temp = new StringBuilder();
         temp.append("\n");
         temp.append("Enter which dice you wish to set aside using the number labels separated by a space (e.g. 1, 3, 5) or enter 0 for none > ");
 
+        return temp;
+    }
+
+    private StringBuilder printMessage9() {
+        StringBuilder temp = new StringBuilder();
+        temp.append("You have not selected any dice to keep from that throw.\n");
+        if (currentThrow.size() > 0) {
+            temp.append("You have the following dice set aside before the next throw\n");
+            for (Integer value : currentThrow) {
+                temp.append(" [").append(value).append("]");
+            }
+        }
         return temp;
     }
 
@@ -250,7 +274,7 @@ public class Coordinator {
         return temp;
     }
 
-    private StringBuilder printThrowsLeft () {
+    private StringBuilder printThrowsLeft() {
         StringBuilder temp = new StringBuilder();
         temp.append(turnsLeft);
         temp.append(" throws remaining for this turn.\n");
@@ -430,6 +454,7 @@ public class Coordinator {
         this.currentThrow = new ArrayList<>();
         this.currentDiceKept = new ArrayList<>();
         this.turnsLeft = 3;
+        this.sequenceActive = false;
         player.resetVariables();
     }
 
