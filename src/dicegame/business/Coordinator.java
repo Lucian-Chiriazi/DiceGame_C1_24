@@ -5,8 +5,10 @@ import dicegame.data.DAO;
 import dicegame.data.SimpleDAOImplementation;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.List;
 
 public class Coordinator {
 
@@ -15,6 +17,7 @@ public class Coordinator {
     private int round;
     private boolean forfeit;
     private boolean sequenceActive;
+    private boolean sequenceAchieved;
     private int currentPlayer;
     private int turnsLeft;
     private String activeCategory;
@@ -28,6 +31,7 @@ public class Coordinator {
         this.round = 6;
         this.forfeit = false;
         this.sequenceActive = false;
+        this.sequenceAchieved = false;
         this.currentPlayer = 0;
         this.turnsLeft = 3;
         this.activeCategory = "";
@@ -104,7 +108,7 @@ public class Coordinator {
                     sequenceActive = true;
                     playSequence(player);
                 }else {
-                    processThrowAndPrintInfo(input3, player);
+                    processThrowAndPrintInfo(input3);
                     player.setDiceLeft(countOccurrences(input3));
                     this.activeCategory = input3;
 
@@ -144,9 +148,12 @@ public class Coordinator {
             System.out.println();
             System.out.println(printThrow());
             if (sequenceActive){
+                if (turnsLeft == 0) {
+
+                }
                 playSequence(player);
             }else {
-                processThrowAndPrintInfo(activeCategory, player);
+                processThrowAndPrintInfo(activeCategory);
                 player.setDiceLeft(countOccurrences(activeCategory));
             }
         }else {
@@ -165,11 +172,28 @@ public class Coordinator {
             System.out.print(printMessage8());
             input = scanner.nextLine().trim();
         }
+        if (turnsLeft >= 0 && !sequenceAchieved) {
+            if (input.equals("0")) {
+                System.out.println("You have not selected any dice to keep from that throw");
+                playNext(player);
+            } else {
+                switch (turnsLeft) {
+                    case 2:
+                        System.out.println("You have selected the following dice to keep.");
+                        processSequence(input, player);
+                        playNext(player);
+                    case 1:
+                        System.out.println("You have selected the following dice to keep.");
+                        processSequence(input, player);
+                        System.out.println("You have the following dice set aside before the final throw.");
+                        for (Integer value : currentDiceKept) {
+                            System.out.print("[" + value + "]");
+                        }
+                        playNext(player);
 
-        if (input.equals("0") && turnsLeft != 0) {
-            playNext(player);
+                }
+            }
         }
-
     }
 
     private StringBuilder printMessage1(Player player) {
@@ -404,7 +428,7 @@ public class Coordinator {
         return temp;
     }
 
-    private void processThrowAndPrintInfo(String input, Player player) {
+    private void processThrowAndPrintInfo(String input) {
 
         int occurrences = countOccurrences(input);
         updateDiceKept(input, occurrences);
@@ -414,6 +438,24 @@ public class Coordinator {
         for (Integer value : currentDiceKept) {
             System.out.print(" [" + value + "] ");
         }
+    }
+
+    private void processSequence(String input, Player player) {
+        List<Integer> sequence1 = Arrays.asList(1, 2, 3, 4, 5);
+        List<Integer> sequence2 = Arrays.asList(2, 3, 4, 5, 6);
+        String[] values = input.split("\\s+");
+        for (String value : values) {
+            this.currentDiceKept.add(Integer.parseInt(value));
+            System.out.print("[" + value + "]");
+        }
+
+        if (currentDiceKept.equals(sequence1) || currentDiceKept.equals(sequence2)) {
+            sequenceAchieved = true;
+
+        }else {
+            player.setDiceLeft(currentDiceKept.size());
+        }
+
     }
 
     private int countOccurrences(String input) {
