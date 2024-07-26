@@ -27,7 +27,7 @@ public class View {
         if ("0".equals(input)) {
             System.out.println("Exit game!");
         }else {
-            coordinator.startGameLogic();
+            coordinator.startGame();
         }
     }
 }

@@ -44,7 +44,7 @@ public class Coordinator {
         this.scanner = new Scanner(System.in);
     }
 
-    public void startGameLogic() {
+    public void startGame() {
         System.out.println(printScoreBoard());
         while (round < 8 && !forfeit) {
             startRound();
@@ -108,20 +108,46 @@ public class Coordinator {
 
                 System.out.println(printCategoryName(input3));
 
-                if (input3.equals("7")) {
-                    sequenceActive = true;
-                    playSequence(player);
-                }else {
-                    processThrowAndPrintInfo(input3);
-                    player.setDiceLeft(countOccurrences(input3));
-                    this.activeCategory = input3;
-
-                    while (this.turnsLeft != 0 && !forfeit) {
-                        playNext(player);
-                    }
-                    player.setPlayerScores(Integer.parseInt(activeCategory), calculateTurnScore());
-                    System.out.println("\n");
-                    System.out.println(printMessage7(player));
+                switch (input3) {
+                    case "1":
+                        playChoice(input3, player);
+                        player.setPlayerScores(Integer.parseInt(activeCategory), calculateTurnScore());
+                        System.out.println("\n");
+                        System.out.println(printMessage7(player));
+                        break;
+                    case "2":
+                        playChoice(input3, player);
+                        player.setPlayerScores(Integer.parseInt(activeCategory), calculateTurnScore());
+                        System.out.println("\n");
+                        System.out.println(printMessage7(player));
+                        break;
+                    case "3":
+                        playChoice(input3, player);
+                        player.setPlayerScores(Integer.parseInt(activeCategory), calculateTurnScore());
+                        System.out.println("\n");
+                        System.out.println(printMessage7(player));
+                        break;
+                    case "4":
+                        playChoice(input3, player);
+                        player.setPlayerScores(Integer.parseInt(activeCategory), calculateTurnScore());
+                        System.out.println("\n");
+                        System.out.println(printMessage7(player));
+                        break;
+                    case "5":
+                        playChoice(input3, player);
+                        player.setPlayerScores(Integer.parseInt(activeCategory), calculateTurnScore());
+                        System.out.println("\n");
+                        System.out.println(printMessage7(player));
+                        break;
+                    case "6":
+                        playChoice(input3, player);
+                        player.setPlayerScores(Integer.parseInt(activeCategory), calculateTurnScore());
+                        System.out.println("\n");
+                        System.out.println(printMessage7(player));
+                        break;
+                    case "7":
+                        playSequence(player);
+                        break;
                 }
             }else {
                 System.out.println("Selection deferred.\n");
@@ -134,6 +160,15 @@ public class Coordinator {
         }
     }
 
+    private void playChoice(String input, Player player) {
+        processThrowAndPrintInfo(input);
+        player.setDiceLeft(countOccurrences(input));
+        this.activeCategory = input;
+
+        while (this.turnsLeft != 0 && !forfeit) {
+            playNext(player);
+        }
+    }
     private void playNext(Player player) {
         System.out.println("\n");
         System.out.println(printMessage1(player));
@@ -151,21 +186,8 @@ public class Coordinator {
             this.currentThrow = generateThrow(player);
             System.out.println();
             System.out.println(printThrow());
-            if (sequenceActive){
-                if (turnsLeft == 0) {
-                    for (Integer value : currentThrow) {
-                        currentDiceKept.add(value);
-                        if (currentDiceKept.equals(sequence1) || currentDiceKept.equals(sequence2)) {
-                            sequenceActive = true;
-                        }
-                    }
-                }
-                playSequence(player);
-                
-            }else {
-                processThrowAndPrintInfo(activeCategory);
-                player.setDiceLeft(countOccurrences(activeCategory));
-            }
+            processThrowAndPrintInfo(activeCategory);
+            player.setDiceLeft(countOccurrences(activeCategory));
         }else {
             initialiseForfeitProcedure();
         }
