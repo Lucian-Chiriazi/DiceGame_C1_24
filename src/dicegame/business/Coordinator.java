@@ -13,6 +13,8 @@ import java.util.List;
 public class Coordinator {
 
     private DAO dao;
+    private final List<Integer> sequence1;
+    private final List<Integer> sequence2;
     private ArrayList<Player> players;
     private int round;
     private boolean forfeit;
@@ -27,6 +29,8 @@ public class Coordinator {
 
     public Coordinator() {
         dao = new SimpleDAOImplementation();
+        this.sequence1 = Arrays.asList(1, 2, 3, 4, 5);
+        this.sequence2 = Arrays.asList(1, 2, 3, 4, 5);
         this.players = dao.getPlayers();
         this.round = 6;
         this.forfeit = false;
@@ -149,9 +153,15 @@ public class Coordinator {
             System.out.println(printThrow());
             if (sequenceActive){
                 if (turnsLeft == 0) {
-
+                    for (Integer value : currentThrow) {
+                        currentDiceKept.add(value);
+                        if (currentDiceKept.equals(sequence1) || currentDiceKept.equals(sequence2)) {
+                            sequenceActive = true;
+                        }
+                    }
                 }
                 playSequence(player);
+                
             }else {
                 processThrowAndPrintInfo(activeCategory);
                 player.setDiceLeft(countOccurrences(activeCategory));
@@ -174,7 +184,7 @@ public class Coordinator {
         }
         if (turnsLeft >= 0 && !sequenceAchieved) {
             if (input.equals("0")) {
-                System.out.println("You have not selected any dice to keep from that throw");
+                System.out.println(printMessage9());
                 playNext(player);
             } else {
                 switch (turnsLeft) {
@@ -185,14 +195,12 @@ public class Coordinator {
                     case 1:
                         System.out.println("You have selected the following dice to keep.");
                         processSequence(input, player);
-                        System.out.println("You have the following dice set aside before the final throw.");
-                        for (Integer value : currentDiceKept) {
-                            System.out.print("[" + value + "]");
-                        }
+                        System.out.println(printMessage9());
                         playNext(player);
-
                 }
             }
+        }else {
+
         }
     }
 
@@ -278,9 +286,9 @@ public class Coordinator {
     private StringBuilder printMessage9() {
         StringBuilder temp = new StringBuilder();
         temp.append("You have not selected any dice to keep from that throw.\n");
-        if (currentThrow.size() > 0) {
+        if (currentDiceKept.size() > 0) {
             temp.append("You have the following dice set aside before the next throw\n");
-            for (Integer value : currentThrow) {
+            for (Integer value : currentDiceKept) {
                 temp.append(" [").append(value).append("]");
             }
         }
@@ -441,8 +449,6 @@ public class Coordinator {
     }
 
     private void processSequence(String input, Player player) {
-        List<Integer> sequence1 = Arrays.asList(1, 2, 3, 4, 5);
-        List<Integer> sequence2 = Arrays.asList(2, 3, 4, 5, 6);
         String[] values = input.split("\\s+");
         for (String value : values) {
             this.currentDiceKept.add(Integer.parseInt(value));
