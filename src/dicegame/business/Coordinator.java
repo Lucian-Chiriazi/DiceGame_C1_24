@@ -29,7 +29,7 @@ public class Coordinator {
         this.sequence1 = Arrays.asList(1, 2, 3, 4, 5);
         this.sequence2 = Arrays.asList(2, 3, 4, 5, 6);
         this.players = dao.getPlayers();
-        this.round = 6;
+        this.round = 1;
         this.forfeit = false;
         this.sequenceActive = false;
         this.sequenceAchieved = false;
@@ -48,6 +48,7 @@ public class Coordinator {
             startRound();
             round++;
         }
+        System.out.println("Game Over.");
         scanner.close();
     }
 
@@ -164,7 +165,7 @@ public class Coordinator {
         player.setDiceLeft(countOccurrences(input));
         this.activeCategory = input;
 
-        while (this.turnsLeft != 0 && !forfeit) {
+        while (this.turnsLeft != 0 && !forfeit && player.getDiceLeft() != 0) {
             playNext(player);
         }
     }
