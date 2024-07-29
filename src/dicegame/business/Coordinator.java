@@ -1,14 +1,9 @@
 package dicegame.business;
 
-import com.sun.xml.internal.bind.v2.TODO;
 import dicegame.data.DAO;
 import dicegame.data.SimpleDAOImplementation;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
-import java.util.Scanner;
-import java.util.List;
+import java.util.*;
 
 public class Coordinator {
 
@@ -25,6 +20,8 @@ public class Coordinator {
     private String activeCategory;
     private ArrayList<Integer> currentThrow;
     private ArrayList<Integer> currentDiceKept;
+    private TreeSet<Integer> sequenceTreeSet = new TreeSet<>();
+
     private Scanner scanner;
 
     public Coordinator() {
@@ -115,6 +112,12 @@ public class Coordinator {
                         System.out.println("\n");
                         System.out.println(printMessage7(player));
                         break;
+                    case "6":
+                        playChoice(input3, player);
+                        player.setPlayerScores(Integer.parseInt(activeCategory), calculateTurnScore());
+                        System.out.println("\n");
+                        System.out.println(printMessage7(player));
+                        break;
                     case "2":
                         playChoice(input3, player);
                         player.setPlayerScores(Integer.parseInt(activeCategory), calculateTurnScore());
@@ -139,13 +142,8 @@ public class Coordinator {
                         System.out.println("\n");
                         System.out.println(printMessage7(player));
                         break;
-                    case "6":
-                        playChoice(input3, player);
-                        player.setPlayerScores(Integer.parseInt(activeCategory), calculateTurnScore());
-                        System.out.println("\n");
-                        System.out.println(printMessage7(player));
-                        break;
                     case "7":
+                        sequenceActive = true;
                         playSequence(player);
                         break;
                 }
@@ -169,6 +167,7 @@ public class Coordinator {
             playNext(player);
         }
     }
+
     private void playNext(Player player) {
         System.out.println("\n");
         System.out.println(printMessage1(player));
@@ -182,12 +181,20 @@ public class Coordinator {
         }
 
         if (input.equals("t")) {
-            turnsLeft--;
-            this.currentThrow = generateThrow(player);
-            System.out.println();
-            System.out.println(printThrow());
-            processThrowAndPrintInfo(activeCategory);
-            player.setDiceLeft(countOccurrences(activeCategory));
+            if ((!sequenceAchieved) && sequenceActive) {
+                turnsLeft--;
+                this.currentThrow = generateThrow(player);
+                System.out.println();
+                System.out.println(printThrow());
+                playSequence(player);
+            }else {
+                turnsLeft--;
+                this.currentThrow = generateThrow(player);
+                System.out.println();
+                System.out.println(printThrow());
+                processThrowAndPrintInfo(activeCategory);
+                player.setDiceLeft(countOccurrences(activeCategory));
+            }
         }else {
             initialiseForfeitProcedure();
         }
@@ -206,8 +213,14 @@ public class Coordinator {
         }
         if (turnsLeft >= 0 && !sequenceAchieved) {
             if (input.equals("0")) {
-                System.out.println(printMessage9());
-                playNext(player);
+                if (turnsLeft == 0) {
+                    System.out.println("A correct sequence has not been established");
+                    System.out.println(player.getPlayerName() + "scores 0 for the sequence category");
+                    player.setPlayerScores(7, 0);
+                }else {
+                    System.out.println(printMessage9());
+                    playNext(player);
+                }
             } else {
                 switch (turnsLeft) {
                     case 2:
@@ -217,13 +230,106 @@ public class Coordinator {
                     case 1:
                         System.out.println("You have selected the following dice to keep.");
                         processSequence(input, player);
-                        System.out.println(printMessage9());
                         playNext(player);
+                    case 0:
+                        this.currentThrow = generateThrow(player);
+                        this.sequenceTreeSet.addAll(currentThrow);
+                        if (sequenceTreeSet.equals(new TreeSet<>(sequence1)) || sequenceTreeSet.equals(new TreeSet<>(sequence2))) {
+                            sequenceAchieved = true;
+                        }
+                        if (sequenceAchieved) {
+                            player.setPlayerScores(7,20);
+                        }else {
+                            player.setPlayerScores(7,0);
+                        }
                 }
             }
         }else {
-
+            if (sequenceAchieved) {
+                player.setPlayerScores(7,20);
+            }else {
+                player.setPlayerScores(7,0);
+            }
         }
+    }
+
+    private ArrayList<Integer> generateThrow(Player player) {
+        ArrayList<Integer> temp = new ArrayList<>();
+        Random rand = new Random();
+        int diceLeft = player.getDiceLeft();
+        for (int i = 0; i < diceLeft; i++) {
+            temp.add(rand.nextInt(6) + 1);
+        }
+        return temp;
+    }
+
+    private void processThrowAndPrintInfo(String input) {
+
+        int occurrences = countOccurrences(input);
+        updateDiceKept(input, occurrences);
+
+        System.out.print("That throw had " + occurrences + " dice with value " + input + ".");
+        System.out.print(" Setting aside " + currentDiceKept.size() + " dice:");
+        for (Integer value : currentDiceKept) {
+            System.out.print(" [" + value + "] ");
+        }
+    }
+
+    private void processSequence(String input, Player player) {
+        String[] values = input.split("\\s+");
+        for (String value : values) {
+            this.sequenceTreeSet.add(currentThrow.get(Integer.parseInt(value) - 1));
+            System.out.print("[" + currentThrow.get(Integer.parseInt(value) - 1) + "]");
+        }
+
+        if (sequenceTreeSet.equals(new TreeSet<>(sequence1)) || sequenceTreeSet.equals(new TreeSet<>(sequence2))) {
+            sequenceAchieved = true;
+        }else {
+            player.setDiceLeft(sequenceTreeSet.size());
+        }
+
+    }
+
+    private int countOccurrences(String input) {
+        int count = 0;
+        int choice = Integer.parseInt(input);
+        for(Integer value : this.currentThrow) {
+            if(value == choice) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private void updateDiceKept(String input, int occurrences) {
+        int choice = Integer.parseInt(input);
+        for (int i = 0; i < occurrences; i++) {
+            currentDiceKept.add(choice);
+        }
+    }
+
+    private int calculateTurnScore() {
+        int totalScore = 0;
+        for (Integer value : currentDiceKept) {
+            totalScore += value;
+        }
+        return totalScore;
+    }
+
+    private void initialiseForfeitProcedure() {
+        this.forfeit = true;
+        System.out.println(printScoreBoard());
+        System.out.println("Game Over!");
+        System.exit(0);
+    }
+
+    private void resetVariables(Player player) {
+        this.activeCategory = " ";
+        this.currentThrow = new ArrayList<>();
+        this.currentDiceKept = new ArrayList<>();
+        this.turnsLeft = 3;
+        this.sequenceActive = false;
+        player.resetVariables();
     }
 
     private StringBuilder printMessage1(Player player) {
@@ -311,7 +417,7 @@ public class Coordinator {
         if (currentDiceKept.size() > 0) {
             temp.append("You have the following dice set aside before the next throw\n");
             for (Integer value : currentDiceKept) {
-                temp.append(" [").append(value).append("]");
+                temp.append("[").append(value).append("] ");
             }
         }
         return temp;
@@ -446,86 +552,6 @@ public class Coordinator {
         }
 
         return temp;
-    }
-
-    private ArrayList<Integer> generateThrow(Player player) {
-        ArrayList<Integer> temp = new ArrayList<>();
-        Random rand = new Random();
-        int diceLeft = player.getDiceLeft();
-        for (int i = 0; i < diceLeft; i++) {
-            temp.add(rand.nextInt(6) + 1);
-        }
-        return temp;
-    }
-
-    private void processThrowAndPrintInfo(String input) {
-
-        int occurrences = countOccurrences(input);
-        updateDiceKept(input, occurrences);
-
-        System.out.print("That throw had " + occurrences + " dice with value " + input + ".");
-        System.out.print(" Setting aside " + currentDiceKept.size() + " dice:");
-        for (Integer value : currentDiceKept) {
-            System.out.print(" [" + value + "] ");
-        }
-    }
-
-    private void processSequence(String input, Player player) {
-        String[] values = input.split("\\s+");
-        for (String value : values) {
-            this.currentDiceKept.add(Integer.parseInt(value));
-            System.out.print("[" + value + "]");
-        }
-
-        if (currentDiceKept.equals(sequence1) || currentDiceKept.equals(sequence2)) {
-            sequenceAchieved = true;
-
-        }else {
-            player.setDiceLeft(currentDiceKept.size());
-        }
-
-    }
-
-    private int countOccurrences(String input) {
-        int count = 0;
-        int choice = Integer.parseInt(input);
-        for(Integer value : this.currentThrow) {
-            if(value == choice) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    private void updateDiceKept(String input, int occurrences) {
-        int choice = Integer.parseInt(input);
-        for (int i = 0; i < occurrences; i++) {
-            currentDiceKept.add(choice);
-        }
-    }
-
-    private int calculateTurnScore() {
-        int totalScore = 0;
-        for (Integer value : currentDiceKept) {
-            totalScore += value;
-        }
-        return totalScore;
-    }
-
-    private void initialiseForfeitProcedure() {
-        this.forfeit = true;
-        System.out.println(printScoreBoard());
-        System.out.println("Game Over!");
-        System.exit(0);
-    }
-
-    private void resetVariables(Player player) {
-        this.activeCategory = " ";
-        this.currentThrow = new ArrayList<>();
-        this.currentDiceKept = new ArrayList<>();
-        this.turnsLeft = 3;
-        this.sequenceActive = false;
-        player.resetVariables();
     }
 
 }
