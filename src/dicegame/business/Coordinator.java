@@ -229,12 +229,22 @@ public class Coordinator {
                     case 2:
                         System.out.println("You have selected the following dice to keep.");
                         processSequence(input, player);
-                        playNext(player);
+                        if (!sequenceAchieved) {
+                            playNext(player);
+                        }else {
+                            System.out.println("A correct sequence has been established");
+                            System.out.println(player.getPlayerName() + " scores 20 for the sequence category");
+                        }
                         break;
                     case 1:
                         System.out.println("You have selected the following dice to keep.");
                         processSequence(input, player);
-                        playNext(player);
+                        if (!sequenceAchieved) {
+                            playNext(player);
+                        }else {
+                            System.out.println("A correct sequence has been established");
+                            System.out.println(player.getPlayerName() + " scores 20 for the sequence category");
+                        }
                         break;
                     case 0:
                         this.sequenceTreeSet.addAll(currentThrow);

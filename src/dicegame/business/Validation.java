@@ -30,9 +30,9 @@ public class Validation {
             if (categoryAvailable(input, player, currentThrow)) {
                 temp = true;
             }
-            if (input.equals("7")) {
-                temp = true;
-            }
+//            if (input.equals("7")) {
+//                temp = true;
+//            }
         }
         return temp;
     }
@@ -68,6 +68,9 @@ public class Validation {
         String[] temp2 = player.getPlayerScores();
 
         if (temp2[userChoice - 1] == null) { // Check to see if the category has already been chosen
+            if (userChoice == 7) {
+                temp = true;
+            }
             for (Integer value : currentThrow) { // Check to see if the choice exists in current throw
                 if (value == userChoice) {
                     temp = true;
